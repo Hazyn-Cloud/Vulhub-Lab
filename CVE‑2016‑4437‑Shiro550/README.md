@@ -87,8 +87,6 @@ Location: /login
 
 更换多条反序列化链测试均出现相同结果：
 
-表格
-
 |反序列化链|返回结果|
 |---|---|
 |CommonsCollections1|302 跳转，Cookie 清空|
