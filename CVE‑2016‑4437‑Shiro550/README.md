@@ -1,3 +1,4 @@
+<img width="640" height="400" alt="1-docker-up" src="https://github.com/user-attachments/assets/7cece233-5f55-4400-af6e-c48b0dd1ad62" />
 # CVE‑2016‑4437 Shiro‑550 复现笔记
 > 本地 Vulhub | 2026.08.25
 
@@ -19,7 +20,8 @@ kPH+bIxk5D2deZiIxcaaaA==
 
 ## 手动复现过程
 ### 1. 启动 docker 环境
-![1-docker-up](images/1-docker-up.png)
+
+![Uploading 1-docker-up.png…]()
 
 ```
 cd vulhub-master/shiro/CVE-2016-4437
