@@ -31,7 +31,7 @@ docker-compose up -d
 
 访问靶场登录页面，抓包查看响应头，返回 `Set‑Cookie: rememberMe=deleteMe`，代表 `rememberMe` 功能开启，存在漏洞测试条件。
 
-![2-login-page](./images/2-login-page.png)
+![2‑login‑page.png](./images/2-login-page.png)
 
 ### 3. 生成恶意 Cookie
 
@@ -66,9 +66,9 @@ java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
 
 运行加密脚本，得到 rememberMe 的 Base64 字符串。
 
-![3-encrypt-result](./images/3-encrypt-result.png)
+![3‑encrypt‑result.png](./images/3-encrypt-result.png)
 
-![4-python-cookie](./images/4-python-cookie.png)
+![4‑python‑cookie.png](./images/4-python-cookie.png)
 
 ### 4. Burp Suite 发送恶意 Cookie
 
@@ -76,7 +76,7 @@ java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
 
 ## 复现问题：持续返回 302 跳转
 
-![5-burp-302-error](./images/5-burp-302-error.png)
+![5‑burp‑302‑error.png](./images/5-burp-302-error.png)
 
 服务器响应：
 
@@ -110,7 +110,7 @@ run
 
 运行后攻击失败，未能成功获取 Meterpreter 会话。
 
-![6-msf-result](./images/6-msf-result.png)
+![6‑msf‑result.png](./images/6-msf-result.png)
 
 ## 复盘总结
 
