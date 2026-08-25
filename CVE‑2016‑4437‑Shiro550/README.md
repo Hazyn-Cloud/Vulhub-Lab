@@ -1,4 +1,4 @@
-<img width="640" height="400" alt="1-docker-up" src="https://github.com/user-attachments/assets/05396e08-a940-4ee9-85c3-44bfed2d9f3a" /># CVE-2016-4437 Shiro-550 复现笔记
+# CVE-2016-4437 Shiro-550 复现笔记
 > 本地 Vulhub 环境
 ---
 ## 漏洞原理
