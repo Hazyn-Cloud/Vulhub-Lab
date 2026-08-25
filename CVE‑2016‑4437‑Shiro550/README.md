@@ -19,7 +19,7 @@ kPH+bIxk5D2deZiIxcaaaA==
 
 ## 手动复现过程
 ### 1. 启动 docker 环境
-![1dockerup](images/1dockerup.png)
+![1-docker-up](images/1-docker-up.png)
 
 
 ```
