@@ -27,7 +27,23 @@ docker-compose up -d
 ```
 
 
+
+
+
+
+
+
+
+
+
+
+
 ![Uploading 1-docker-up.png…]()
+
+
+
+
+
 
 
 
