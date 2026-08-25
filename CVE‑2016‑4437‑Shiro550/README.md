@@ -1,5 +1,5 @@
-# CVE-2016-4437 Shiro-550 复现笔记
-> 本地 Vulhub 环境 | 复现时间：2026.08.25
+<img width="640" height="400" alt="1-docker-up" src="https://github.com/user-attachments/assets/05396e08-a940-4ee9-85c3-44bfed2d9f3a" /># CVE-2016-4437 Shiro-550 复现笔记
+> 本地 Vulhub 环境
 ---
 ## 漏洞原理
 Shiro 1.2.4 及之前版本，`rememberMe` 功能使用了一个硬编码的 AES 密钥：
@@ -31,10 +31,10 @@ kPH+bIxk5D2deZiIxcaaaA==
 
 bash
 
-cd vulhub/shiro/CVE-2016-4437
+cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
 
-[https://./screenshots/1-docker-up.png](https://./screenshots/1-docker-up.png)
+<img width="640" height="400" alt="1-docker-up" src="https://github.com/user-attachments/assets/ee8cc1cc-19df-466a-ad0a-d6684d5d0f0e" />
 
 ### 2. 确认漏洞存在
 
