@@ -26,14 +26,14 @@ kPH+bIxk5D2deZiIxcaaaA==
 cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
 ```
-<img width="640" height="400" alt="1-docker-up" src="https://github.com/user-attachments/assets/a74bde29-d958-4a60-9597-d8fe29c93f4c" />
+![docker启动成功](./images/1-docker-up.png)
 
 
 ### 2. 验证漏洞特征
 
 访问靶场登录页面，抓包查看响应头，返回 `Set‑Cookie: rememberMe=deleteMe`，代表 `rememberMe` 功能开启，存在漏洞测试条件。
 
-<img width="997" height="623" alt="2-login-page" src="https://github.com/user-attachments/assets/ec211182-de54-4ec6-80ad-b4a07dcda1cb" />
+![登录页面](./images/2-login-page.png)
 
 
 ### 3. 生成恶意 Cookie
@@ -69,10 +69,9 @@ java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
 
 运行加密脚本，得到 rememberMe 的 Base64 字符串。
 
-<img width="640" height="400" alt="3-encrypt-result" src="https://github.com/user-attachments/assets/36a7bd5d-6456-4796-90ac-f2a54ee3c00e" />
+![加密结果](./images/3-encrypt-result.png)
 
-
-<img width="640" height="400" alt="4-python-cookie" src="https://github.com/user-attachments/assets/92053533-faed-4e9e-9da0-3b71a59726ca" />
+![python生成cookie](./images/4-python-cookie.png)
 
 ### 4. Burp Suite 发送恶意 Cookie
 
@@ -80,8 +79,7 @@ java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
 
 ## 复现问题：持续返回 302 跳转
 
-<img width="1280" height="763" alt="5-burp-302-error" src="https://github.com/user-attachments/assets/8787c3e6-08e3-41a6-9fbe-0435fc0fba42" />
-
+![burp302报错](./images/5-burp-302-error.png)
 服务器响应：
 
 ```
@@ -114,8 +112,7 @@ run
 
 运行后攻击失败，未能成功获取 Meterpreter 会话。
 
-<img width="640" height="400" alt="6-msf-result" src="https://github.com/user-attachments/assets/4a2cb53f-13bf-4a83-bc76-f734004c8d55" />
-
+![msf反弹shell结果](./images/6-msf-result.png)
 ## 复盘总结
 
 1. 已成功识别 Shiro‑550 漏洞特征，环境搭建完整；
