@@ -21,13 +21,11 @@ kPH+bIxk5D2deZiIxcaaaA==
 ## 手动复现过程
 ### 1. 启动 docker 环境
 
-![Uploading 1-docker-up.png…]()
-
 ```
 cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
 ```
-
+![Uploading 1-docker-up.png…]()
 ### 2. 验证漏洞特征
 
 访问靶场登录页面，抓包查看响应头，返回 `Set‑Cookie: rememberMe=deleteMe`，代表 `rememberMe` 功能开启，存在漏洞测试条件。
