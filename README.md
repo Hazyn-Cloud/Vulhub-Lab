@@ -4,9 +4,8 @@
 
 ---
 
-##  已复现漏洞列表
-- [CVE‑2016‑4437 Apache Shiro‑550 反序列化 RCE](./CVE-2016-4437-Shiro550/README.md)
-- [CVE‑2016‑4437 Apache Shiro‑550 反序列化 RCE](./CVE-2016-4437-Shiro550/README.md)
+## 已复现漏洞列表
+- [CVE-2016-4437 Apache Shiro‑550 反序列化 RCE](./CVE-2016-4437-Shiro550/README.md)
 
 
 ---
