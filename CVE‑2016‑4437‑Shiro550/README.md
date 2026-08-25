@@ -18,14 +18,12 @@ kPH+bIxk5D2deZiIxcaaaA==
 | 工具 | Burp Suite、ysoserial、Python、msf |
 ---
 ## 手动复现过程
-### 1. 起靶场
+### 1. ![启动docker环境](./images/1-docker-up.png)
 
 ```
 cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
 ```
-
-[https://./screenshots/1-docker-up.png](https://./screenshots/1-docker-up.png)
 
 ### 2. 验证漏洞
 
