@@ -66,7 +66,7 @@ java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
 
 运行加密脚本，得到 rememberMe 的 Base64 字符串。
 
-![3‑encrypt‑result.png](./images/3-encrypt-result.png)
+![3‑加密结果.png](./images/3-encrypt-result.png)
 
 ![4‑python‑cookie.png](./images/4-python-cookie.png)
 
