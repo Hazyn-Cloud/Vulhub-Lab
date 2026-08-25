@@ -3,10 +3,9 @@
 ---
 ## 漏洞说明
 Shiro 1.2.4 及之前版本，`rememberMe` 用了固定 AES 密钥：
-
+```
 kPH+bIxk5D2deZiIxcaaaA==
-
-text
+```
 
 知道密钥就能自己拼 Cookie 发过去，服务端反序列化后执行命令。就两个关键点：密钥硬编码 + 反序列化。
 ---
