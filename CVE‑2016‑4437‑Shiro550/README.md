@@ -19,7 +19,8 @@ kPH+bIxk5D2deZiIxcaaaA==
 
 ## 手动复现过程
 ### 1. 启动 docker 环境
-![1-docker-up](images/1-docker-up.png)
+![1dockerup](images/1dockerup.png)
+
 
 ```
 cd vulhub-master/shiro/CVE-2016-4437
