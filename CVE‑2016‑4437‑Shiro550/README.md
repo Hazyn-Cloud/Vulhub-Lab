@@ -66,16 +66,16 @@ java -jar ysoserial-all.jar CommonsCollections2 "id" > payload.ser
 
 运行加密脚本，得到 rememberMe 的 Base64 字符串。
 
-![3‑加密结果.png](images/3-encrypt-result.png)
+![图片](images/3-encrypt-result.png)
 
-![4‑python‑cookie.png](images/4-python-cookie.png)
+![图片](images/4-python-cookie.png)
 ### 4. Burp Suite 发送恶意 Cookie
 
 修改请求包 Cookie 字段：`rememberMe=生成的Base64字符串`，发送请求进行测试。
 
 ## 复现问题：持续返回 302 跳转
 
-![5‑burp‑302‑error.png](images/5-burp-302-error.png)
+![图片](images/5-burp-302-error.png)
 服务器响应：
 
 ```
