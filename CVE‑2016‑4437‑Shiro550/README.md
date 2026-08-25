@@ -21,7 +21,6 @@ kPH+bIxk5D2deZiIxcaaaA==
 ### 1. 启动 docker 环境
 ![1-docker-up](images/1-docker-up.png)
 
-
 ```
 cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
