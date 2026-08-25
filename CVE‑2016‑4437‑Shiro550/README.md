@@ -20,7 +20,7 @@ text
 ---
 ## 手动复现过程
 ### 1. 起靶场
-```bash
+
 cd vulhub-master/shiro/CVE-2016-4437
 docker-compose up -d
 
